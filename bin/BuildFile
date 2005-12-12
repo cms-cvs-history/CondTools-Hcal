@@ -15,5 +15,6 @@
 <use name=CondCore/ESSources>
 <use name=FWCore/Framework>	
 <use name=FWCore/Services>
-<bin file=initDefaultHcalCalibs.cpp></bin>	
+<use name=Geometry/CaloTopology>
+
 <bin file=hcalCalibrationsDbTool.cc></bin>	
