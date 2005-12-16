@@ -42,7 +42,7 @@
 #include "CondCore/MetaDataService/interface/MetaData.h"
 
 // Hcal calibrations
-#include "CalibCalorimetry/HcalAlgos/interface/HcalDbServiceHardcode.h"
+#include "CalibCalorimetry/HcalAlgos/interface/HcalDbHardcode.h"
 #include "CalibCalorimetry/HcalAlgos/interface/HcalDbASCIIIO.h"
 #include "CalibCalorimetry/HcalAlgos/interface/HcalDbXml.h"
 #include "CondFormats/HcalObjects/interface/HcalPedestals.h"
@@ -129,19 +129,20 @@ std::vector<HcalDetId> undefinedCells (const T& fData) {
 }
 
 void fillDefaults (HcalPedestals* fPedestals) {
-  HcalDbServiceHardcode srv;
   std::vector<HcalDetId> cells = undefinedCells (*fPedestals);
-  int i = cells.size ();
-  while (--i >= 0) fPedestals->addValue (cells[i].rawId(), srv.pedestals (cells [i]));
+  for (std::vector <HcalDetId>::const_iterator cell = cells.begin (); cell != cells.end (); cell++) {
+    HcalPedestal item = HcalDbHardcode::makePedestal (*cell);
+    fPedestals->addValue (*cell, item.getValues ());
+  }
   fPedestals->sort ();
 }
 
 void fillDefaults (HcalGains* fGains) {
-  HcalDbServiceHardcode srv;
   std::vector<HcalDetId> cells = undefinedCells (*fGains);
-  int i = cells.size ();
-  while (--i >= 0) fGains->addValue (cells[i].rawId(), srv.gains (cells [i]));
-  fGains->sort ();
+  for (std::vector <HcalDetId>::const_iterator cell = cells.begin (); cell != cells.end (); cell++) {
+    HcalGain item = HcalDbHardcode::makeGain (*cell);
+    fGains->addValue (*cell, item.getValues ());
+  }
 }
 
 void fillDefaults (HcalElectronicsMap* fMap) {
