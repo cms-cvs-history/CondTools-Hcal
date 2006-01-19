@@ -16,5 +16,8 @@
 <use name=FWCore/Framework>	
 <use name=FWCore/Services>
 <use name=Geometry/CaloTopology>
+<use name=CondTools/Hcal>
 
 <bin file=hcalCalibrationsDbTool.cc></bin>	
+<bin file=hcalCalibrationsCopy.cc></bin>	
+
