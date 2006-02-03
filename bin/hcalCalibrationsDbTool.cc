@@ -30,9 +30,9 @@
 #include "DataSvc/IDataSvc.h"
 #include "DataSvc/ICacheSvc.h"
 #include "DataSvc/Ref.h"
-#include "RelationalAccess/RelationalException.h"
+#include "RelationalAccess/SchemaException.h"
 #include "Collection/Collection.h"
-#include "AttributeList/AttributeList.h"
+#include "CoralBase/AttributeList.h"
 #include "FileCatalog/FCSystemTools.h"
 #include "FileCatalog/FCException.h"
 #include "FileCatalog/IFCAction.h"
@@ -511,8 +511,8 @@ bool PoolData::getObject (const std::string& fToken, pool::Ref<T>* fObject) {
     fObject->isNull ();
     mService->transaction().commit();
   }
-  catch( const pool::RelationalTableNotFound& e ){
-    std::cerr << "PoolData::getObject-> pool::RelationalTableNotFound Exception" << std::endl;
+  catch(const coral::TableNotExistingException& e) {
+    std::cerr << "PoolData::getObject-> coral::TableNotExisting Exception" << std::endl;
   }
   catch (const seal::Exception& e) {
     std::cerr<<"PoolData::getObject-> seal exception: " << e.what() << std::endl;
