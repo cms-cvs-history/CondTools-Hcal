@@ -18,6 +18,6 @@
 <use name=Geometry/CaloTopology>
 <use name=CondTools/Hcal>
 
-<bin file=hcalCalibrationsDbTool.cc></bin>	
+#<bin file=hcalCalibrationsDbTool.cc></bin>	
 <bin file=hcalCalibrationsCopy.cc></bin>	
 
