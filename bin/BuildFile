@@ -18,6 +18,8 @@
 <use name=Geometry/CaloTopology>
 <use name=CondTools/Hcal>
 
+# <bin file=scaleGains.cc></bin>	
+<bin file=hcalDeleteObject.cc></bin>	
 <bin file=hcalPublishConditions.cc></bin>	
 <bin file=hcalIovTool.cc></bin>	
 <bin file=hcalCalibrationsCopy.cc></bin>	

@@ -1,0 +1,6 @@
+<use name=CalibCalorimetry/HcalAlgos>
+<use name=CondFormats/HcalObjects>
+<use name=CondTools/Hcal>
+
+<bin file=scaleGains.cc></bin>	
+
