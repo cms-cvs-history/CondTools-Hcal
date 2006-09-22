@@ -1,6 +1,10 @@
 <use name=CalibCalorimetry/HcalAlgos>
 <use name=CondFormats/HcalObjects>
 <use name=CondTools/Hcal>
+<use name=CondCore/DBCommon>
+<use name=CondCore/IOVService>
 
-<bin file=scaleGains.cc></bin>	
+#<bin file=scaleGains.cc></bin>	
+<bin file=testPedestalStore.cc></bin>	
+
 
