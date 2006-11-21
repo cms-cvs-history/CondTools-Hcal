@@ -14,6 +14,7 @@
 <use name=CondCore/MetaDataService>
 <use name=FWCore/Framework>	
 <use name=FWCore/Services>
+<use name=FWCore/MessageService>
 <use name=Geometry/CaloTopology>
 <use name=CondTools/Hcal>
 
