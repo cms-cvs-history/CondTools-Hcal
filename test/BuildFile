@@ -5,8 +5,8 @@
 <use name=CondCore/IOVService>
 
 #<bin file=scaleGains.cc></bin>	
-<bin file=testPedestalStore.cc></bin>	
-<bin file=peds_txt2xml.cc></bin>	
-<bin file=hcalExtractPedestals.cc></bin>	
+#<bin file=testPedestalStore.cc></bin>	
+#<bin file=peds_txt2xml.cc></bin>	
+#<bin file=hcalExtractPedestals.cc></bin>	
 
 
