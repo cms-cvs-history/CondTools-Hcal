@@ -15,7 +15,7 @@
 
 
 // pool
-#include "FWCore/PluginManager/interface/PluginManager.h"
+#include "PluginManager/PluginManager.h"
 #include "POOLCore/POOLContext.h"
 #include "POOLCore/Token.h"
 #include "FileCatalog/URIParser.h"
