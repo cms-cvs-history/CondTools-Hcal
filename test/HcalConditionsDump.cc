@@ -1,8 +1,6 @@
 
 /*----------------------------------------------------------------------
 
-Toy EDProducers and EDProducts for testing purposes only.
-
 R.Ofierzynski - 2.Oct. 2007
    modified to dump all pedestals on screen, see 
    testHcalDBFake.cfg
@@ -43,12 +41,16 @@ namespace edmtest
   {
   public:
     explicit  HcalConditionsDump(edm::ParameterSet const& p) 
-    { }
+    {
+      front = p.getUntrackedParameter<string>("outFilePrefix","Dump");
+    }
+
     explicit  HcalConditionsDump(int i) 
     { }
     virtual ~ HcalConditionsDump() { }
     virtual void analyze(const edm::Event& e, const edm::EventSetup& c);
   private:
+    string front;
   };
   
   void
@@ -58,7 +60,7 @@ namespace edmtest
     // Context is not used.
     std::cout <<"HcalConditionsDump::analyze-> I AM IN RUN NUMBER "<<e.id().run() <<std::endl;
     //    std::cout <<"HcalConditionsDump::analyze->  ---EVENT NUMBER "<<e.id().run() <<std::endl;
-    string front = "Dump";
+    //front = "Dump";
 
     int iov = 0;
 
@@ -71,41 +73,45 @@ namespace edmtest
     std::ostringstream filename;
     filename << front << "HcalPedestals" << "_" << iov << ".txt";
     std::ofstream outStream(filename.str().c_str());
+    cout << "--- Dumping Pedestals ---" << endl;
     HcalDbASCIIIO::dumpObject (outStream, (*myped) );
 
 
-    // pedestal widths
-    edm::ESHandle<HcalPedestalWidths> pPedWs;
-    context.get<HcalPedestalWidthsRcd>().get(pPedWs);
-    const HcalPedestalWidths* mypedwid = pPedWs.product();
-
-    // dump pedestal widths:
-    std::ostringstream filenamePW;
-    filenamePW << front << "HcalPedestalWidths" << "_" << iov << ".txt";
-    std::ofstream outStreamPW(filenamePW.str().c_str());
-    HcalDbASCIIIO::dumpObject (outStreamPW, (*mypedwid) );
-
-    // gains
-    edm::ESHandle<HcalGains> pGains;
-    context.get<HcalGainsRcd>().get(pGains);
-    const HcalGains* mygains = pGains.product();
-
-    // dump gains:
-    std::ostringstream filenameG;
-    filenameG << front << "HcalGains" << "_" << iov << ".txt";
-    std::ofstream outStreamG(filenameG.str().c_str());
-    HcalDbASCIIIO::dumpObject (outStreamG, (*mygains) );
-
-    // gainwidths
-    edm::ESHandle<HcalGainWidths> pGainWs;
-    context.get<HcalGainWidthsRcd>().get(pGainWs);
-    const HcalGainWidths* mygwid = pGainWs.product();
-
-    // dump gain widths:
-    std::ostringstream filenameGW;
-    filenameGW << front << "HcalGainWidths" << "_" << iov << ".txt";
-    std::ofstream outStreamGW(filenameGW.str().c_str());
-    HcalDbASCIIIO::dumpObject (outStreamGW, (*mygwid) );
+//    // pedestal widths
+//    edm::ESHandle<HcalPedestalWidths> pPedWs;
+//    context.get<HcalPedestalWidthsRcd>().get(pPedWs);
+//    const HcalPedestalWidths* mypedwid = pPedWs.product();
+//
+//    // dump pedestal widths:
+//    std::ostringstream filenamePW;
+//    filenamePW << front << "HcalPedestalWidths" << "_" << iov << ".txt";
+//    std::ofstream outStreamPW(filenamePW.str().c_str());
+//    cout << "--- Dumping Pedestal Widths ---" << endl;
+//    HcalDbASCIIIO::dumpObject (outStreamPW, (*mypedwid) );
+//
+//    // gains
+//    edm::ESHandle<HcalGains> pGains;
+//    context.get<HcalGainsRcd>().get(pGains);
+//    const HcalGains* mygains = pGains.product();
+//
+//    // dump gains:
+//    std::ostringstream filenameG;
+//    filenameG << front << "HcalGains" << "_" << iov << ".txt";
+//    std::ofstream outStreamG(filenameG.str().c_str());
+//    cout << "--- Dumping Gains ---" << endl;
+//    HcalDbASCIIIO::dumpObject (outStreamG, (*mygains) );
+//
+//    // gainwidths
+//    edm::ESHandle<HcalGainWidths> pGainWs;
+//    context.get<HcalGainWidthsRcd>().get(pGainWs);
+//    const HcalGainWidths* mygwid = pGainWs.product();
+//
+//    // dump gain widths:
+//    std::ostringstream filenameGW;
+//    filenameGW << front << "HcalGainWidths" << "_" << iov << ".txt";
+//    std::ofstream outStreamGW(filenameGW.str().c_str());
+//    cout << "--- Dumping Gain Widths ---" << endl;
+//    HcalDbASCIIIO::dumpObject (outStreamGW, (*mygwid) );
 
 
 //    std::cout <<" Hcal peds for channel HB eta=15, phi=5, depth=2 "<<std::endl;

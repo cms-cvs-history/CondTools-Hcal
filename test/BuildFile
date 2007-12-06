@@ -1,17 +1,16 @@
-#<environment>
-  <use name=clhep>
-  <use name=DataFormats/HcalDetId>
-  <use name=CalibCalorimetry/HcalAlgos>
-  <use name=CondFormats/HcalObjects>
-  <use name=CondTools/Hcal>
-  <use name=CondFormats/DataRecord>
-  <use name=CondCore/DBCommon>
-  <use name=CondCore/IOVService>
-  <use name=CondCore/MetaDataService>
-  <library file=HcalConditionsDump.cc name=HcalConditionsDump>
+<use name=clhep>
+<use name=DataFormats/HcalDetId>
+<use name=CalibCalorimetry/HcalAlgos>
+<use name=CondFormats/HcalObjects>
+<use name=CondTools/Hcal>
+<use name=CondFormats/DataRecord>
+<use name=CondCore/DBCommon>
+<use name=CondCore/IOVService>
+<use name=CondCore/MetaDataService>
+
+<library file=HcalConditionsDump.cc name=HcalConditionsDump>
     <flags EDM_PLUGIN=1>
-  </library>
-#</environment>
+</library>
 
 
 #<bin file=scaleGains.cc></bin>	
