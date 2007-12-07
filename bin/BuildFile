@@ -17,6 +17,11 @@
 <use name=FWCore/MessageService>
 <use name=Geometry/CaloTopology>
 <use name=CondTools/Hcal>
+<use name=DataFormats/HcalDetId>
+
+<bin file=HcalRawIdToReadable.cpp></bin>
+<bin file=HcalCheckpeds.cc></bin>
+<bin file=HcalCheckpedwid.cc></bin>
 
 #<bin file=hcalDeleteObject.cc></bin>	
 #<bin file=hcalPublishConditions.cc></bin>	
