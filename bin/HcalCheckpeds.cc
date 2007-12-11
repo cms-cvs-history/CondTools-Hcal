@@ -36,30 +36,35 @@ int main (int argc , char** argv)
   char * FILEDATA3 = argv[3];   
   DATA3 = fopen(FILEDATA3,"w");
   int file3_status=0;
+  fprintf (DATA3, "# %15s %15s %15s %15s %8s %8s %8s %8s %10s\n", "eta", "phi", "dep", "det", "cap0", "cap1", "cap2", "cap3", "DetId");
 
   int a1, a2, a3;
   float f1, f2, f3, f4;
   long id;
 
   char* subdet;
+  char* bla;
   //char subdet[10];
   int intsubdet = 0;
   int line1 = 0;
-  map< vector<int> ,int> mymap;
-  //  vector<vector<int> > myas;
+
+  typedef map <long,int> mymaptype;
+  typedef mymaptype::value_type mymapvalue;
+
+  mymaptype mymap;
+  vector<vector<int> > myas;
   vector<vector<float> > myfs;
   vector<char*> mysubdet;
-  vector<long> myDetIds;
+  //vector<long> myDetIds;
   typedef vector<int> vecint;
-  typedef map<vecint,int>::value_type mymaptype;
 
   do
     {
       line1++;
-//      if (line == 1)
+//      if (line1 == 1)
 //	{
-//	  file1_status = fscanf(DATA1," \n",&a1, &a2, &a3,
-//				&subdet, &f1, &f2, &f3, &f4, &id);
+//	  file1_status = fscanf(DATA1,"* \n");
+//	  line1++;
 //	}
       a1=0; a2=0; a3=0; f1=0; f2=0; f3=0; f4=0; id=0;
       file1_status = fscanf(DATA1," %d %d %d %s %f %f %f %f %X \n",&a1, &a2, &a3,
@@ -71,7 +76,7 @@ int main (int argc , char** argv)
 	  aline.push_back(a1);
 	  aline.push_back(a2);
 	  aline.push_back(a3);
-	  //	  myas.push_back(aline);
+	  myas.push_back(aline);
 	  vector<float> fline;
 	  fline.push_back(f1);
 	  fline.push_back(f2);
@@ -79,8 +84,8 @@ int main (int argc , char** argv)
 	  fline.push_back(f4);
 	  myfs.push_back(fline);
 	  mysubdet.push_back(subdet);
-	  myDetIds.push_back(id);
-	  mymap.insert(mymaptype(aline,(line1-1)));
+	  //	  myDetIds.push_back(id);
+	  mymap.insert(mymapvalue(id,(line1-1)));
         }
     }
   while(file1_status != EOF ); // loop over events in one data file
@@ -92,17 +97,22 @@ int main (int argc , char** argv)
   do
     {
       line2++;
+//      if (line2 == 1)
+//	{
+//	  file1_status = fscanf(DATA2,"* \n");
+//	  line2++;
+//	}
       a1=0; a2=0; a3=0; f1=0; f2=0; f3=0; f4=0; id=0;
       file2_status = fscanf(DATA2," %d %d %d %s %f %f %f %f %10X \n",&a1, &a2, &a3, &subdet, &f1, &f2, &f3, &f4, &id);
 
       if (file2_status !=EOF)
 	{
-	  vector<int> aline;
-	  aline.push_back(a1);
-	  aline.push_back(a2);
-	  aline.push_back(a3);
+	  vector<int> bline;
+	  bline.push_back(a1);
+	  bline.push_back(a2);
+	  bline.push_back(a3);
 
-	  if (mymap.find(aline) == mymap.end())
+	  if (mymap.find(id) == mymap.end())
 	    {
 	      std::cout << "s"; //>>> eta,phi,depth not found !  ";
 	      //	      printf("readout: %d %d %d %s %f %f %f %f %X \n",a1, a2, a3, &subdet, f1, f2, f3, f4, id);
@@ -110,33 +120,36 @@ int main (int argc , char** argv)
 	    }
 	  else
 	    {
-	      int myind = mymap.find(aline)->second;
-	      //	      vector<int> mya = mymap.find().myas.at(myind);
+	      int myind = mymap.find(id)->second;
+	      vector<int> mya = myas.at(myind);
+	      if (bline != mya) std::cout << "*ATTN: for detid different indices "<< id << std::endl;
+
 	      vector<float> myf = myfs.at(myind);
 	      char* mysub = mysubdet.at(myind);
-	      long myid = myDetIds.at(myind);
+	      long myid = mymap.find(id)->first;
 
 	      std::cout << "f";
 	      fprintf (DATA3, "  %15d %15d %15d %15s %8.5f %8.5f %8.5f %8.5f %10X\n", 
-		       a1, a2, a3, &mysub,
+		       mya.at(0), mya.at(1), mya.at(2), &mysub,
 		       myf.at(0), myf.at(1), myf.at(2), myf.at(3), myid);
 
-	      mymap.erase(aline);
+	      mymap.erase(id);
 	    }
 	}
     }
   while(file2_status != EOF ); // loop over events in one data file
   
   std::cout << std::endl << "leftover from file1:" << std::endl;
-  for (map<vector<int>,int>::iterator mit = mymap.begin(); mit != mymap.end(); mit++)
+  for (mymaptype::iterator mit = mymap.begin(); mit != mymap.end(); mit++)
     {
       int myind = mit->second;
       vector<float> myf = myfs.at(myind);
+      vector<int> mya = myas.at(myind);
       char* mysub = mysubdet.at(myind);
-      long myid = myDetIds.at(myind);
+      long myid = mit->first;
       
       fprintf (DATA3, "  %15d %15d %15d %15s %8.5f %8.5f %8.5f %8.5f %10X\n", 
-	       a1, a2, a3, &mysub,
+	       mya.at(0), mya.at(1), mya.at(2), &mysub,
 	       myf.at(0), myf.at(1), myf.at(2), myf.at(3), myid);
       
     }
