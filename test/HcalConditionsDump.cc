@@ -22,15 +22,7 @@ R.Ofierzynski - 2.Oct. 2007
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
-#include "CondFormats/HcalObjects/interface/HcalPedestals.h"
-#include "CondFormats/HcalObjects/interface/HcalPedestalWidths.h"
-#include "CondFormats/HcalObjects/interface/HcalGains.h"
-#include "CondFormats/HcalObjects/interface/HcalGainWidths.h"
-#include "DataFormats/HcalDetId/interface/HcalDetId.h"
 #include "CondFormats/DataRecord/interface/HcalPedestalsRcd.h"
-#include "CondFormats/DataRecord/interface/HcalPedestalWidthsRcd.h"
-#include "CondFormats/DataRecord/interface/HcalGainsRcd.h"
-#include "CondFormats/DataRecord/interface/HcalGainWidthsRcd.h"
 #include "CalibCalorimetry/HcalAlgos/interface/HcalDbASCIIIO.h"
 
 using namespace std;
