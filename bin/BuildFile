@@ -20,8 +20,6 @@
 <use name=DataFormats/HcalDetId>
 
 <bin file=HcalRawIdToReadable.cpp></bin>
-<bin file=HcalCheckpeds.cc></bin>
-<bin file=HcalCheckpedwid.cc></bin>
 <bin file=scaleGains.cc></bin>	
 
 #<bin file=hcalDeleteObject.cc></bin>	
