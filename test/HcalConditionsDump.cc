@@ -23,6 +23,10 @@ R.Ofierzynski - 2.Oct. 2007
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "CondFormats/DataRecord/interface/HcalPedestalsRcd.h"
+#include "CondFormats/DataRecord/interface/HcalQIEDataRcd.h"
+#include "CondFormats/DataRecord/interface/HcalPedestalWidthsRcd.h"
+#include "CondFormats/DataRecord/interface/HcalGainsRcd.h"
+#include "CondFormats/DataRecord/interface/HcalElectronicsMapRcd.h"
 #include "CalibCalorimetry/HcalAlgos/interface/HcalDbASCIIIO.h"
 
 using namespace std;
@@ -52,9 +56,32 @@ namespace edmtest
     // Context is not used.
     std::cout <<"HcalConditionsDump::analyze-> I AM IN RUN NUMBER "<<e.id().run() <<std::endl;
     //    std::cout <<"HcalConditionsDump::analyze->  ---EVENT NUMBER "<<e.id().run() <<std::endl;
-    //front = "Dump";
 
     int iov = 0;
+    // e-map
+    edm::ESHandle<HcalElectronicsMap> p;
+    context.get<HcalElectronicsMapRcd>().get(p);
+    HcalElectronicsMap* myemap = new HcalElectronicsMap(*p.product());
+    myemap->sort();
+
+    // dump emap
+    std::ostringstream filenameE;
+    filenameE << front << "HcalElectronicsMap" << "_" << iov << ".txt";
+    std::ofstream outStreamE(filenameE.str().c_str());
+    cout << "--- Dumping Electronics Map ---" << endl;
+    HcalDbASCIIIO::dumpObject (outStreamE, (*myemap) );
+
+    // qie
+    edm::ESHandle<HcalQIEData> pq;
+    context.get<HcalQIEDataRcd>().get(pq);
+    HcalQIEData* myqies = new HcalQIEData(*pq.product());
+
+    // dump qies
+    std::ostringstream filenameQ;
+    filenameQ << front << "HcalQIEData" << "_" << iov << ".txt";
+    std::ofstream outStreamQ(filenameQ.str().c_str());
+    cout << "--- Dumping QIE Data ---" << endl;
+    HcalDbASCIIIO::dumpObject (outStreamQ, (*myqies) );
 
     // pedestals
     edm::ESHandle<HcalPedestals> pPeds;
@@ -69,30 +96,30 @@ namespace edmtest
     HcalDbASCIIIO::dumpObject (outStream, (*myped) );
 
 
-//    // pedestal widths
-//    edm::ESHandle<HcalPedestalWidths> pPedWs;
-//    context.get<HcalPedestalWidthsRcd>().get(pPedWs);
-//    const HcalPedestalWidths* mypedwid = pPedWs.product();
-//
-//    // dump pedestal widths:
-//    std::ostringstream filenamePW;
-//    filenamePW << front << "HcalPedestalWidths" << "_" << iov << ".txt";
-//    std::ofstream outStreamPW(filenamePW.str().c_str());
-//    cout << "--- Dumping Pedestal Widths ---" << endl;
-//    HcalDbASCIIIO::dumpObject (outStreamPW, (*mypedwid) );
-//
-//    // gains
-//    edm::ESHandle<HcalGains> pGains;
-//    context.get<HcalGainsRcd>().get(pGains);
-//    const HcalGains* mygains = pGains.product();
-//
-//    // dump gains:
-//    std::ostringstream filenameG;
-//    filenameG << front << "HcalGains" << "_" << iov << ".txt";
-//    std::ofstream outStreamG(filenameG.str().c_str());
-//    cout << "--- Dumping Gains ---" << endl;
-//    HcalDbASCIIIO::dumpObject (outStreamG, (*mygains) );
-//
+    // pedestal widths
+    edm::ESHandle<HcalPedestalWidths> pPedWs;
+    context.get<HcalPedestalWidthsRcd>().get(pPedWs);
+    const HcalPedestalWidths* mypedwid = pPedWs.product();
+
+    // dump pedestal widths:
+    std::ostringstream filenamePW;
+    filenamePW << front << "HcalPedestalWidths" << "_" << iov << ".txt";
+    std::ofstream outStreamPW(filenamePW.str().c_str());
+    cout << "--- Dumping Pedestal Widths ---" << endl;
+    HcalDbASCIIIO::dumpObject (outStreamPW, (*mypedwid) );
+
+    // gains
+    edm::ESHandle<HcalGains> pGains;
+    context.get<HcalGainsRcd>().get(pGains);
+    const HcalGains* mygains = pGains.product();
+
+    // dump gains:
+    std::ostringstream filenameG;
+    filenameG << front << "HcalGains" << "_" << iov << ".txt";
+    std::ofstream outStreamG(filenameG.str().c_str());
+    cout << "--- Dumping Gains ---" << endl;
+    HcalDbASCIIIO::dumpObject (outStreamG, (*mygains) );
+
 //    // gainwidths
 //    edm::ESHandle<HcalGainWidths> pGainWs;
 //    context.get<HcalGainWidthsRcd>().get(pGainWs);
