@@ -27,9 +27,11 @@ R.Ofierzynski - 2.Oct. 2007
 #include "CondFormats/DataRecord/interface/HcalPedestalWidthsRcd.h"
 #include "CondFormats/DataRecord/interface/HcalGainsRcd.h"
 #include "CondFormats/DataRecord/interface/HcalElectronicsMapRcd.h"
+#include "CondFormats/DataRecord/interface/HcalGainWidthsRcd.h"
+#include "CondFormats/DataRecord/interface/HcalRespCorrsRcd.h"
+#include "CondFormats/DataRecord/interface/HcalChannelQualityRcd.h"
+#include "CondFormats/DataRecord/interface/HcalZSThresholdsRcd.h"
 #include "CalibCalorimetry/HcalAlgos/interface/HcalDbASCIIIO.h"
-
-using namespace std;
 
 namespace edmtest
 {
@@ -38,101 +40,68 @@ namespace edmtest
   public:
     explicit  HcalConditionsDump(edm::ParameterSet const& p) 
     {
-      front = p.getUntrackedParameter<string>("outFilePrefix","Dump");
+      front = p.getUntrackedParameter<std::string>("outFilePrefix","Dump");
     }
 
     explicit  HcalConditionsDump(int i) 
     { }
     virtual ~ HcalConditionsDump() { }
     virtual void analyze(const edm::Event& e, const edm::EventSetup& c);
+
+    template<class S, class SRcd> void dumpIt(S* myS, SRcd* mySRcd, const edm::Event& e, const edm::EventSetup& context, std::string name);
+
   private:
-    string front;
+    std::string front;
   };
   
+
+  template<class S, class SRcd>
+  void HcalConditionsDump::dumpIt(S* myS, SRcd* mySRcd, const edm::Event& e, const edm::EventSetup& context, std::string name)
+  {
+    int myrun = e.id().run();
+    edm::ESHandle<S> p;
+    context.get<SRcd>().get(p);
+    S* myobject = new S(*p.product());
+    
+    std::ostringstream file;
+    file << front << name.c_str() << "_Run" << myrun << ".txt";
+    std::ofstream outStream(file.str().c_str() );
+    std::cout << "HcalConditionsDump: ---- Dumping " << name.c_str() << " ----" << std::endl;
+    HcalDbASCIIIO::dumpObject (outStream, (*myobject) );
+  }
+
+
   void
    HcalConditionsDump::analyze(const edm::Event& e, const edm::EventSetup& context)
   {
     using namespace edm::eventsetup;
-    // Context is not used.
     std::cout <<"HcalConditionsDump::analyze-> I AM IN RUN NUMBER "<<e.id().run() <<std::endl;
-    //    std::cout <<"HcalConditionsDump::analyze->  ---EVENT NUMBER "<<e.id().run() <<std::endl;
 
-    int iov = 0;
-    // e-map
-    edm::ESHandle<HcalElectronicsMap> p;
-    context.get<HcalElectronicsMapRcd>().get(p);
-    HcalElectronicsMap* myemap = new HcalElectronicsMap(*p.product());
-    myemap->sort();
-
-    // dump emap
-    std::ostringstream filenameE;
-    filenameE << front << "HcalElectronicsMap" << "_" << iov << ".txt";
-    std::ofstream outStreamE(filenameE.str().c_str());
-    cout << "--- Dumping Electronics Map ---" << endl;
-    HcalDbASCIIIO::dumpObject (outStreamE, (*myemap) );
-
-    // qie
-    edm::ESHandle<HcalQIEData> pq;
-    context.get<HcalQIEDataRcd>().get(pq);
-    HcalQIEData* myqies = new HcalQIEData(*pq.product());
-
-    // dump qies
-    std::ostringstream filenameQ;
-    filenameQ << front << "HcalQIEData" << "_" << iov << ".txt";
-    std::ofstream outStreamQ(filenameQ.str().c_str());
-    cout << "--- Dumping QIE Data ---" << endl;
-    HcalDbASCIIIO::dumpObject (outStreamQ, (*myqies) );
-
-    // pedestals
-    edm::ESHandle<HcalPedestals> pPeds;
-    context.get<HcalPedestalsRcd>().get(pPeds);
-    const HcalPedestals* myped = pPeds.product();
-
-    // dump pedestals:
-    std::ostringstream filename;
-    filename << front << "HcalPedestals" << "_" << iov << ".txt";
-    std::ofstream outStream(filename.str().c_str());
-    cout << "--- Dumping Pedestals ---" << endl;
-    HcalDbASCIIIO::dumpObject (outStream, (*myped) );
+    dumpIt(new HcalElectronicsMap, new HcalElectronicsMapRcd, e,context,"ElectronicsMap");
+    dumpIt(new HcalQIEData, new HcalQIEDataRcd, e,context,"QIEData");
+    dumpIt(new HcalPedestals, new HcalPedestalsRcd, e,context,"Pedestals");
+    dumpIt(new HcalPedestalWidths, new HcalPedestalWidthsRcd, e,context,"PedestalWidths");
+    dumpIt(new HcalGains, new HcalGainsRcd, e,context,"Gains");
+    dumpIt(new HcalGainWidths, new HcalGainWidthsRcd, e,context,"GainWidths");
+    dumpIt(new HcalRespCorrs, new HcalRespCorrsRcd, e,context,"RespCorrs");
+    dumpIt(new HcalChannelQuality, new HcalChannelQualityRcd, e,context,"ChannelQuality");
+    dumpIt(new HcalZSThresholds, new HcalZSThresholdsRcd, e,context,"ZSThresholds");
 
 
-    // pedestal widths
-    edm::ESHandle<HcalPedestalWidths> pPedWs;
-    context.get<HcalPedestalWidthsRcd>().get(pPedWs);
-    const HcalPedestalWidths* mypedwid = pPedWs.product();
-
-    // dump pedestal widths:
-    std::ostringstream filenamePW;
-    filenamePW << front << "HcalPedestalWidths" << "_" << iov << ".txt";
-    std::ofstream outStreamPW(filenamePW.str().c_str());
-    cout << "--- Dumping Pedestal Widths ---" << endl;
-    HcalDbASCIIIO::dumpObject (outStreamPW, (*mypedwid) );
-
-    // gains
-    edm::ESHandle<HcalGains> pGains;
-    context.get<HcalGainsRcd>().get(pGains);
-    const HcalGains* mygains = pGains.product();
-
-    // dump gains:
-    std::ostringstream filenameG;
-    filenameG << front << "HcalGains" << "_" << iov << ".txt";
-    std::ofstream outStreamG(filenameG.str().c_str());
-    cout << "--- Dumping Gains ---" << endl;
-    HcalDbASCIIIO::dumpObject (outStreamG, (*mygains) );
-
-//    // gainwidths
-//    edm::ESHandle<HcalGainWidths> pGainWs;
-//    context.get<HcalGainWidthsRcd>().get(pGainWs);
-//    const HcalGainWidths* mygwid = pGainWs.product();
+//    int iov = 0;
+//    // e-map
+//    edm::ESHandle<HcalElectronicsMap> p;
+//    context.get<HcalElectronicsMapRcd>().get(p);
+//    HcalElectronicsMap* myemap = new HcalElectronicsMap(*p.product());
+//    myemap->sort();
 //
-//    // dump gain widths:
-//    std::ostringstream filenameGW;
-//    filenameGW << front << "HcalGainWidths" << "_" << iov << ".txt";
-//    std::ofstream outStreamGW(filenameGW.str().c_str());
-//    cout << "--- Dumping Gain Widths ---" << endl;
-//    HcalDbASCIIIO::dumpObject (outStreamGW, (*mygwid) );
-
-
+//    // dump emap
+//    std::ostringstream filenameE;
+//    filenameE << front << "HcalElectronicsMap" << "_" << iov << ".txt";
+//    std::ofstream outStreamE(filenameE.str().c_str());
+//    std::cout << "--- Dumping Electronics Map ---" << std::endl;
+//    HcalDbASCIIIO::dumpObject (outStreamE, (*myemap) );
+//
 //    std::cout <<" Hcal peds for channel HB eta=15, phi=5, depth=2 "<<std::endl;
 //    int channelID = HcalDetId (HcalBarrel, 15, 5, 2).rawId();
 //    const HcalPedestals* myped=pPeds.product();
