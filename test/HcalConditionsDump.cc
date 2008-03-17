@@ -33,6 +33,9 @@ R.Ofierzynski - 2.Oct. 2007
 #include "CondFormats/DataRecord/interface/HcalZSThresholdsRcd.h"
 #include "CalibCalorimetry/HcalAlgos/interface/HcalDbASCIIIO.h"
 
+#include "CalibFormats/HcalObjects/interface/HcalDbService.h"
+#include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
+
 namespace edmtest
 {
   class HcalConditionsDump : public edm::EDAnalyzer
@@ -86,6 +89,16 @@ namespace edmtest
     dumpIt(new HcalRespCorrs, new HcalRespCorrsRcd, e,context,"RespCorrs");
     dumpIt(new HcalChannelQuality, new HcalChannelQualityRcd, e,context,"ChannelQuality");
     dumpIt(new HcalZSThresholds, new HcalZSThresholdsRcd, e,context,"ZSThresholds");
+
+
+  // get conditions
+    edm::ESHandle<HcalDbService> conditions;
+    context.get<HcalDbRecord>().get(conditions);
+
+    int cell = HcalDetId (HcalBarrel, -1, 4, 1).rawId();
+    
+    const HcalCalibrations& calibrations=conditions->getHcalCalibrations(cell);
+
 
 
 //    int iov = 0;
