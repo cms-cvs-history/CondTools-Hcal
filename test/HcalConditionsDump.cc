@@ -36,6 +36,8 @@ R.Ofierzynski - 2.Oct. 2007
 #include "CalibFormats/HcalObjects/interface/HcalDbService.h"
 #include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
 
+#include "FWCore/Framework/interface/IOVSyncValue.h"
+
 namespace edmtest
 {
   class HcalConditionsDump : public edm::EDAnalyzer
@@ -71,6 +73,10 @@ namespace edmtest
     std::ofstream outStream(file.str().c_str() );
     std::cout << "HcalConditionsDump: ---- Dumping " << name.c_str() << " ----" << std::endl;
     HcalDbASCIIIO::dumpObject (outStream, (*myobject) );
+
+    if ( context.get<HcalPedestalsRcd>().validityInterval().first() == edm::IOVSyncValue::invalidIOVSyncValue() )
+      std::cout << "error: invalid IOV sync value !" << std::endl;
+
   }
 
 
