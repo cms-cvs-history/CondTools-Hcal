@@ -8,7 +8,7 @@
 <use name=CondCore/IOVService>
 <use name=CondCore/MetaDataService>
 
-<library file=HcalConditionsDump.cc name=HcalConditionsDump>
+<library file=HcalConditionsTest.cc name=HcalConditionsTest>
     <flags EDM_PLUGIN=1>
 </library>
 
