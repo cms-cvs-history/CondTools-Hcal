@@ -21,6 +21,7 @@
 
 <bin file=HcalRawIdToReadable.cpp></bin>
 <bin file=scaleGains.cc></bin>	
+<bin file=corrGains.cc></bin>	
 
 #<bin file=hcalDeleteObject.cc></bin>	
 #<bin file=hcalPublishConditions.cc></bin>	
