@@ -12,10 +12,6 @@
 #    <flags EDM_PLUGIN=1>
 #</library>
 
-#<library file=MapTester.cc name=MapTester>
-#    <flags EDM_PLUGIN=1>
-#</library>
-
 #<bin file=testPedestalStore.cc></bin>	
 #<bin file=peds_txt2xml.cc></bin>	
 #<bin file=hcalExtractPedestals.cc></bin>	
