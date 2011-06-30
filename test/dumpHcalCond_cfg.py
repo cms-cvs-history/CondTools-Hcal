@@ -34,7 +34,6 @@ process.prod = cms.EDAnalyzer("HcalDumpConditions",
     'RecoParams'
     ,'LongRecoParams'
     ,'MCParams'
-    ,'FlagHFDigiTimeParams'
                                  ),
     outFilePrefix = cms.untracked.string('DumpCond')
 )
@@ -107,13 +106,7 @@ process.es_pool = cms.ESSource("PoolDBESSource",
         cms.PSet(
             record = cms.string('HcalMCParamsRcd'),
             tag = cms.string('hcal_mcparams_v1.00_test')
-        ),
-        cms.PSet(
-    record = cms.string('HcalFlagHFDigiTimeParamsRcd'),
-    tag = cms.string('hcal_flaghfdigitimeparams_v1.00_test')
-    ),
-        
-        
+        ) 
 )
 )
 
@@ -180,7 +173,6 @@ process.es_hardcode = cms.ESSource("HcalHardcodeCalibrations",
 #        ,'RecoParams'
 #        ,'LongRecoParams'
 #        ,'MCParams'
-#        ,'FlagHFDigiTimeParams'        
         )
  )
 
@@ -245,11 +237,7 @@ process.es_hardcode = cms.ESSource("HcalHardcodeCalibrations",
 #         cms.PSet(
 #             object = cms.string('MCParams'),
 #             file = cms.FileInPath('CondTools/Hcal/test/testdata/MCParams.txt')
-#         ) ,
-#         cms.PSet(
-#             object = cms.string('FlagHFDigiTimeParams'),
-#             file = cms.FileInPath('CondTools/Hcal/test/testdata/HcalFlagHFDigiTimeParams.txt')
-#         ) ,
+#         ) 
 #         )
 # )
 
